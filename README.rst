@@ -1,17 +1,7 @@
-==========================
-Tachyonic Project Devstack
-==========================
-
-Quick links
------------
-
-* `Website <http://www.tachyonic.org/>`__.
-* `Documentation <http://www.tachyonic.org/sphinx/devstack>`__.
-
 Installation
-------------
+============
 
-Tachyonic Project Devstack currently fully supports `CPython <https://www.python.org/downloads/>`__ 3.6.
+Tachyonic Project devstack currently fully supports `CPython <https://www.python.org/downloads/>`__ 3.6.
 
 
 CPython
@@ -40,7 +30,7 @@ the cythonized devstack framework with the system's default C compiler.
 Source Code
 -----------
 
-Tachyonic Project Devstack infrastructure and code is hosted on `GitHub <https://github.com/TachyonicProject/devstack>`_.
+Tachyonic Project devstack infrastructure and code is hosted on `GitHub <https://github.com/TachyonicProject/devstack>`_.
 Making the code easy to browse, download, fork, etc. Pull requests are always
 welcome!
 
