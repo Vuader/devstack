@@ -16,12 +16,12 @@ graft tests
 include setup.py
 
 # Other
-recursive-include $package *.json
-recursive-include $package *.ini
-recursive-include $package *.tpl
-recursive-include $package *.sh
-recursive-include $package *.txt
+recursive-include devstack *.json
+recursive-include devstack *.ini
+recursive-include devstack *.tpl
+recursive-include devstack *.sh
+recursive-include devstack *.txt
 
 # NO-CYTHON PACKAGES
-recursive-exclude $package *.c
-recursive-exclude $package *.so
+recursive-exclude devstack *.c
+recursive-exclude devstack *.so
