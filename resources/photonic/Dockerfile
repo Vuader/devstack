@@ -1,11 +1,8 @@
 FROM ubuntu
 RUN apt-get update
 RUN apt-get --assume-yes install apache2
-#RUN apt-get --assume-yes install apache2-dev
-#RUN apt-get --assume-yes install apache2-utils
 RUN apt-get --assume-yes install libcurl4-openssl-dev libssl-dev libffi-dev
 RUN apt-get --assume-yes install python3
-#RUN apt-get --assume-yes install python3-dev
 RUN apt-get --assume-yes install python3-pip
 RUN apt-get --assume-yes install git
 RUN apt-get --assume-yes install sqlite3
@@ -32,6 +29,8 @@ RUN apt-get clean
 
 RUN mkdir /opt/tachyonic
 WORKDIR /opt/tachyonic
+
+# @Vuader: The json files are merely pulled so that we can make use of docker cache where possible
 ADD https://api.github.com/repos/TachyonicProject/luxon/git/refs/heads/development luxon.json
 RUN git clone -b development https://github.com/TachyonicProject/luxon.git
 ADD https://api.github.com/repos/TachyonicProject/psychokinetic/git/refs/heads/development psychokinetic.json
