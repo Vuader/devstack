@@ -12,6 +12,9 @@ graft docs
 prune docs/build
 graft tests
 
+# Resources
+graft devstack/resources
+
 # Setup-related things
 include setup.py
 
