@@ -79,16 +79,21 @@ Once this is completed, you can see view wether the docker instances are running
    
    $ docker ps
 
-Provide atleast 2 minutes for all nodes and services to be runnining especially during initial startup.
+Provide at least 2 minutes for all nodes and services to be runnining especially during initial startup.
 
 You can access the Photonic UI via http://localhost:9000
 
 All other endpoints/services are exposed to the host.
 
-Mysql: 3306
-UI/Photonic Port 9000 (RestAPI/JSON)
-Identity/Infinitystone: 9001 (RestAPI/JSON)
-Radius/Tradius: 9002 (RestAPI/JSON)
++-------------------------+------+----------------+
+| Mysql                   | 3306 |                |
++-------------------------+------+----------------+
+| UI/Photonic             | 9000 | (RestAPI/JSON) |
++-------------------------+------+----------------+
+| Identity/Infinitystone  | 9001 | (RestAPI/JSON) |
++-------------------------+------+----------------+
+| Radius/Tradius          | 9002 | (RestAPI/JSON) |
++-------------------------+------+----------------+
 
 Development
 -----------
@@ -109,3 +114,15 @@ To restart endpoint gunicorn wsgi applications:
 .. code:: bash
 
    $ devstack -r
+
+When the tachyonic containers start for the first time, their entrypoint scripts does a `pip install` on the package
+to install the package as well as their dependencies. Because this takes a bit of time, it creates a
+`/installed` file in the container, and only performs this installation if the `/installed` file is not present. If you
+have the requirement to force a re-installation, simply remove that file from the running container.
+For example, for photonic:
+
+.. code:: bash
+
+   $ docker exec photonic rm /installed
+
+Next time when `devstack -s path` is run, the package and it's dependacies will be re-installed.
