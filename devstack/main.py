@@ -88,16 +88,19 @@ def kill(args):
         except:
             pass
     try:
+        print("Stopping sql")
         stop('sql')
     except:
         pass
 
     try:
+        print("Stopping rabbitmq")
         stop('rabbitmq')
     except:
         pass
 
     try:
+        print("Stopping redis")
         stop('redis')
     except:
         pass
@@ -145,10 +148,10 @@ def start_env(path):
     module = Module('devstack')
     for b in builds:
         print("Starting %s" % b)
-        try:
-            remove_container(b)
-        except:
-            pass
+        #try:
+        #    remove_container(b)
+        #except:
+        #    pass
         module.copy('resources/%s/%s.sh' % (b,b,),
                     path)
         module.copy('resources/%s/%s.nginx' % (b,b,),
