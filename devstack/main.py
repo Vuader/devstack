@@ -35,7 +35,6 @@ import argparse
 import subprocess
 from tempfile import TemporaryFile
 
-import docker
 
 from luxon.utils.pkg import Module
 from luxon.utils.files import mkdir, Open, chmod, exists, ls, rm, joinpath

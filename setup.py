@@ -230,7 +230,7 @@ try:
 except ImportError:
     ext_modules = []
     print('\nNOTE: Cython not installed. '
-          'Luxon will still work fine, but may run '
+          'Devstack will still work fine, but may run '
           'slower.\n')
 
 # define install_requires for specific Python versions
