@@ -3,36 +3,25 @@ Installation
 
 Tachyonic Project devstack currently fully supports `CPython <https://www.python.org/downloads/>`__ 3.6, 3,7.
 
+Requirements
+------------
 
-CPython
---------
+Devstack uses docker to run endpoints and services known as projects in Tachonic.
 
-A universal wheel is available on PyPI for devstack. Installing it is as simple as:
+https://www.docker.com
 
-.. code:: bash
-
-    $ pip3 install devstack
-
-Installing the devstack wheel is a conveniant way to get up and running quickly
-in a development environment, but for an extra speed boost when deploying your
-application in production, devstack can compile itself with Cython.
-
-The following commands tell pip to install Cython, and then to invoke devstack's
-setup.py, which will in turn detect the presence of Cython and then compile
-the cythonized devstack framework with the system's default C compiler.
+Quick Install
+-------------
 
 .. code:: bash
 
-	$ pip3 install cython
-	$ pip3 install devstack
+   $ pip3 install https://github.com/TachyonicProject/devstack/tarball/latest#egg=devstack
 
-
-Source Code
------------
+Source Code Install
+-------------------
 
 Tachyonic Project devstack infrastructure and code is hosted on `GitHub <https://github.com/TachyonicProject/devstack>`_.
-Making the code easy to browse, download, fork, etc. Pull requests are always
-welcome!
+Making the code easy to browse, download, fork, etc. Pull requests are always welcome!
 
 Clone the project like this:
 
@@ -70,9 +59,53 @@ code is loaded from Python sources.
 
     $ python3 setup.py clean
 
-You can manually test changes to the devstack by switching to the
-directory of the cloned repo:
+Usage
+-----
+
+Devstack creates multiple docker insances for micro-services that share a common directory on th host machine. 
+
+The common directory contains Tachyonic Project Repositories for micro-services and dependencies. There is an additional directory known as www that contains the project deployment environment.
+
+Example startup:
 
 .. code:: bash
 
-    $ python3 setup.py test
+   $ mkdir tachyonic
+   $ devsatack -s tachyonic
+
+Once this is completed, you can see view wether the docker instances are running using:
+
+.. code:: bash
+   
+   $ docker ps
+
+Provide atleast 2 minutes for all nodes and services to be runnining especially during initial startup.
+
+You can access the Photonic UI via http://localhost:9000
+
+All other endpoints/services are exposed to the host.
+
+Mysql: 3306
+UI/Photonic Port 9000 (RestAPI/JSON)
+Identity/Infinitystone: 9001 (RestAPI/JSON)
+Radius/Tradius: 9002 (RestAPI/JSON)
+
+Development
+-----------
+By default we do not allow to push to our repositories directly.
+
+When editing code ensure you rename origin and add your own fork as origin.
+
+Example:
+
+.. code:: bash
+
+   $ git remote rename origin upstream
+   $ git remote add origin git@github.com:cfrademan/tradius.git
+   $ git push -u origin development
+
+To restart endpoint gunicorn wsgi applications:
+
+.. code:: bash
+
+   $ devstack -r
