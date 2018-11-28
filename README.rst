@@ -115,9 +115,9 @@ To restart endpoint gunicorn wsgi applications:
 
    $ devstack -r
 
-When the tachyonic containers start for the first time, their entrypoint scripts does a `pip install` on the package
+When the tachyonic containers start for the first time, their entrypoint scripts does a ``pip install`` on the package
 to install the package as well as their dependencies. Because this takes a bit of time, it creates a
-`/installed` file in the container, and only performs this installation if the `/installed` file is not present. If you
+``/installed`` file in the container, and only performs this installation if the ``/installed`` file is not present. If you
 have the requirement to force a re-installation, simply remove that file from the running container.
 For example, for photonic:
 
@@ -125,4 +125,4 @@ For example, for photonic:
 
    $ docker exec photonic rm /installed
 
-Next time when `devstack -s path` is run, the package and it's dependacies will be re-installed.
+Next time when ``devstack -s path`` is run, the package and it's dependacies will be re-installed.
