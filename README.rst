@@ -71,7 +71,7 @@ Example startup:
 .. code:: bash
 
    $ mkdir tachyonic
-   $ devsatack -s tachyonic
+   $ devstack -s tachyonic
 
 Once this is completed, you can see view wether the docker instances are running using:
 
