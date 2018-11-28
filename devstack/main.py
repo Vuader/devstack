@@ -60,7 +60,12 @@ depends = ['luxon',
 
 ports = {'photonic': { '80/tcp': 9000 },
          'infinitystone': { '80/tcp': 9001 },
-         'tradius': { '80/tcp': 9002 }
+         'tradius': {'80/tcp': 9002,
+                     '1812/udp': 1812,
+                     '1813/udp': 1813,
+                     '1812/tcp': 1812,
+                     '1813/tcp': 1813
+                    }
         }
 
 def execute(*args):
@@ -105,6 +110,56 @@ def kill(args):
     except:
         pass
 
+def clear(args):
+    for b in builds:
+        try:
+            print("Deleting container %s" % b)
+            remove_container(b)
+        except:
+            pass
+    try:
+        print("Deleting container sql")
+        remove_container('sql')
+    except:
+        pass
+
+    try:
+        print("Deleting container rabbitmq")
+        remove_container('rabbitmq')
+    except:
+        pass
+
+    try:
+        print("Deleting container redis")
+        remove_container('redis')
+    except:
+        pass
+
+def delete(args):
+    for b in builds:
+        try:
+            print("Deleting image %s" % b)
+            remove_image(b)
+        except:
+            pass
+    try:
+        print("Deleting image sql")
+        remove_image('sql')
+    except:
+        pass
+
+    try:
+        print("Deleting image rabbitmq")
+        remove_image('rabbitmq')
+    except:
+        pass
+
+    try:
+        print("Deleting image redis")
+        remove_image('redis')
+    except:
+        pass
+
 def build_images():
     module = Module('devstack')
     for b in builds:
@@ -115,7 +170,6 @@ def build_images():
                            docker_obj)
         for l in log:
             print(l)
-
 
 def clone_repos():
     for b in builds + depends:
@@ -148,18 +202,15 @@ def start_env(path):
     module = Module('devstack')
     for b in builds:
         print("Starting %s" % b)
-        #try:
-        #    remove_container(b)
-        #except:
-        #    pass
         module.copy('resources/%s/%s.sh' % (b,b,),
                     path)
         module.copy('resources/%s/%s.nginx' % (b,b,),
                     path)
         start(b, b,
-              links=['sql', 'rabbitmq', 'redis'] + links,
+              links=['sql', 'rabbitmq', 'redis',] + links,
               volumes={path: '/opt/tachyonic'},
-              ports=ports.get(b))
+              ports=ports.get(b),
+              hostname=b)
         links.append(b)
 
 def main(argv):
@@ -172,6 +223,18 @@ def main(argv):
     group.add_argument('-s',
                        dest='path',
                        help='Start/Build environment in path')
+
+    group.add_argument('-c',
+                       action='append_const',
+                       dest='funcs',
+                       const=clear,
+                       help='Clear containers in docker environment')
+
+    group.add_argument('-d',
+                       action='append_const',
+                       dest='funcs',
+                       const=delete,
+                       help='Clear images in docker environment')
 
     group.add_argument('-k',
                        action='append_const',
