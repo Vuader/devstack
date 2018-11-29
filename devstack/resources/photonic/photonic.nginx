@@ -5,7 +5,7 @@ server {
 	index index.html index.htm index.nginx-debian.html;
 	server_name _;
 	location /static {
-		alias /opt/tachyonic/photonic/photonic/static;
+		alias /opt/tachyonic/www/photonic/static;
 	}
 	location / {
 		include proxy_params;
