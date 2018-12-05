@@ -16,7 +16,7 @@ if [ ! -f $INSTALLED ]; then
     cd /opt/tachyonic/www/tradius
     luxon -i tradius .
     luxon -d .
-    tradius freeradius setup
+    tradius radius setup
     ln -s /opt/tachyonic/www/infinitystone/public.pem .
 
     rm /etc/nginx/sites-enabled/default

@@ -180,7 +180,10 @@ def clone_repos():
 def reload(args):
     for b in builds:
         print("Reloading %s" % b)
-        exec(b, 'pkill -HUP -f gunicorn3')
+        try:
+            exec(b, 'pkill -HUP -f gunicorn3')
+        except:
+            print("Failed Reloading %s" % b)
 
 def start_env(path):
     clone_repos()
