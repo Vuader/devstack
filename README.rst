@@ -62,9 +62,10 @@ code is loaded from Python sources.
 Usage
 -----
 
-Devstack creates multiple docker insances for micro-services that share a common directory on th host machine. 
+Devstack creates multiple docker insances for micro-services that share a common directory on the host machine.
 
-The common directory contains Tachyonic Project Repositories for micro-services and dependencies. There is an additional directory known as www that contains the project deployment environment.
+The common directory contains Tachyonic Project Repositories for micro-services and dependencies.
+There is an additional directory known as www that contains the project deployment environment.
 
 Example startup:
 
@@ -94,6 +95,39 @@ All other endpoints/services are exposed to the host.
 +-------------------------+------+----------------+
 | Radius/Tradius          | 9002 | (RestAPI/JSON) |
 +-------------------------+------+----------------+
+
+To control which modules are started, specify a json file (via ``-m`` switch) with the required builds and ports.
+For example, create a file called ``modules.json``:
+
+.. code:: json
+
+    {
+        "builds" : ["infinitystone",
+                    "tradius",
+                    "netrino",
+                    "topenstack",
+                    "photonic"
+                   ],
+
+        "ports" : {"photonic": { "80/tcp": 9000 },
+                  "infinitystone": { "80/tcp": 9001 },
+                  "tradius": {"80/tcp": 9002,
+                         "1812/udp": 1812,
+                         "1813/udp": 1813,
+                         "1812/tcp": 1812,
+                         "1813/tcp": 1813
+                        },
+                  "netrino": { "80/tcp": 9004 },
+                  "topenstack": { "80/tcp": 9005 }
+            }
+    }
+
+and start with:
+
+.. code:: bash
+
+   $ devstack -s tachyonic -m modules.json
+
 
 Development
 -----------

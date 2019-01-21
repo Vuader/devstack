@@ -33,6 +33,7 @@ import os
 import sys
 import argparse
 import subprocess
+import json
 from tempfile import TemporaryFile
 
 
@@ -65,7 +66,7 @@ ports = {'photonic': { '80/tcp': 9000 },
                      '1813/udp': 1813,
                      '1812/tcp': 1812,
                      '1813/tcp': 1813
-                    }
+                    },
         }
 
 def execute(*args):
@@ -217,6 +218,9 @@ def start_env(path):
         links.append(b)
 
 def main(argv):
+    global builds
+    global ports
+
     description = metadata.description + ' ' + metadata.version
     print("%s\n" % description)
 
@@ -251,8 +255,19 @@ def main(argv):
                        const=reload,
                        help='Reload Gunicorn Applications in all containers')
 
+    parser.add_argument('-m',
+                        help='Load modules from json file at'
+                            'specified location',
+                        dest='init',
+                        default=None)
+
 
     args = parser.parse_args()
+
+    if args.init is not None:
+        modules = json.load(open(args.init))
+        builds = modules['builds']
+        ports = modules['ports']
 
     if args.funcs is not None:
         for func in args.funcs:
