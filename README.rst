@@ -15,6 +15,12 @@ Quick Install
 
 .. code:: bash
 
+   $ pip3 install devstack
+
+or
+
+.. code:: bash
+
    $ pip3 install https://github.com/TachyonicProject/devstack/tarball/latest#egg=devstack
 
 Source Code Install
