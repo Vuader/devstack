@@ -256,16 +256,16 @@ def main(argv):
                        help='Reload Gunicorn Applications in all containers')
 
     parser.add_argument('-m',
-                        help='Load modules from json file at'
+                        help='Load modules from json file at '
                             'specified location',
-                        dest='init',
+                        dest='json_file',
                         default=None)
 
 
     args = parser.parse_args()
 
-    if args.init is not None:
-        modules = json.load(open(args.init))
+    if args.json_file is not None:
+        modules = json.load(open(args.json_file))
         builds = modules['builds']
         ports = modules['ports']
 
