@@ -19,6 +19,9 @@ if [ ! -f $INSTALLED ]; then
     cd /opt/tachyonic/tradius
     python3 setup.py develop
 
+	cd /opt/tachyonic/netrino
+    python3 setup.py develop
+
     # Continued...
 
     mkdir /opt/tachyonic/www/photonic
@@ -26,6 +29,7 @@ if [ ! -f $INSTALLED ]; then
     luxon -i photonic .
     luxon -i infinitystone.ui .
     luxon -i tradius.ui .
+    luxon -i netrino.ui .
     ln -s /opt/tachyonic/www/infinitystone/public.pem .
 
     rm /etc/nginx/sites-enabled/default
