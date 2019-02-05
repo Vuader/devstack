@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2018 Christiaan Frans Rademan.
+# Copyright (c) 2018-2019 Christiaan Frans Rademan, Dave Kruger.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -52,6 +52,7 @@ from devstack import metadata
 
 builds = ['infinitystone',
           'tradius',
+          'netrino',
           'photonic',
          ]
 
@@ -67,6 +68,7 @@ ports = {'photonic': { '80/tcp': 9000 },
                      '1812/tcp': 1812,
                      '1813/tcp': 1813
                     },
+         'netrino': { '80/tcp': 9003 }
         }
 
 def execute(*args):
