@@ -12,6 +12,9 @@ if [ ! -f $INSTALLED ]; then
     cd /opt/tachyonic/infinitystone
     python3 setup.py develop
 
+    cd /opt/tachyonic/netrino
+    python3 setup.py develop
+
     mkdir /opt/tachyonic/www/infinitystone
     cd /opt/tachyonic/www/infinitystone
     luxon -i infinitystone .
