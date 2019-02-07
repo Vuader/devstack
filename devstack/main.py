@@ -54,22 +54,22 @@ builds = ['infinitystone',
           'tradius',
           'netrino',
           'photonic',
-         ]
+          ]
 
 depends = ['luxon',
            'psychokinetic'
-          ]
+           ]
 
-ports = {'photonic': { '80/tcp': 9000 },
-         'infinitystone': { '80/tcp': 9001 },
+ports = {'photonic': {'80/tcp': 9000},
+         'infinitystone': {'80/tcp': 9001},
          'tradius': {'80/tcp': 9002,
                      '1812/udp': 1812,
                      '1813/udp': 1813,
                      '1812/tcp': 1812,
-                     '1813/tcp': 1813
-                    },
-         'netrino': { '80/tcp': 9003 }
-        }
+                     '1813/tcp': 1813,
+                     },
+         'netrino': {'80/tcp': 9003},
+         }
 
 def execute(*args):
     loginfo = TemporaryFile()
