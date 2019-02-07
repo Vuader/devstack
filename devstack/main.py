@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2018 Christiaan Frans Rademan.
+# Copyright (c) 2018-2019 Christiaan Frans Rademan, Dave Kruger.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -70,7 +70,6 @@ ports = {'photonic': {'80/tcp': 9000},
                      },
          'netrino': {'80/tcp': 9003},
          }
-
 
 def execute(*args):
     loginfo = TemporaryFile()

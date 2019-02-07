@@ -15,3 +15,8 @@ Releases
 ------------------------------------
 
   * User now has the ability to specify which Tachyonic projects/endpoints/modules must be loaded during setup.
+
+0.0.3 = Initial Release (2019/02/05)
+------------------------------------
+
+  * Added Netrino.
