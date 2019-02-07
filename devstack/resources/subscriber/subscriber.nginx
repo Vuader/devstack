@@ -7,7 +7,7 @@ server {
 	location / {
 		include proxy_params;
 		proxy_redirect off;
-		proxy_pass http://unix:/opt/tachyonic/www/tradius/wsgi.sock:/;
+		proxy_pass http://unix:/opt/tachyonic/www/subscriber/wsgi.sock:/;
 		proxy_set_header Host $host;
 	}
 }

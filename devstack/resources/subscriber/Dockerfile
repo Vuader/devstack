@@ -28,4 +28,4 @@ RUN apt-get --assume-yes install vim
 
 RUN apt-get clean
 
-CMD /bin/bash /opt/tachyonic/tradius.sh && cd /opt/tachyonic/www/tradius && gunicorn3 --workers 10 --bind unix:wsgi.sock wsgi:application
+CMD /bin/bash /opt/tachyonic/subscriber.sh && cd /opt/tachyonic/www/subscriber && gunicorn3 --workers 10 --bind unix:wsgi.sock wsgi:application

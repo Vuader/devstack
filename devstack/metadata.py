@@ -9,7 +9,7 @@ package = 'devstack'
 project = "Tachyonic Project " + package.title()
 project_no_spaces = project.replace(' ', '')
 # Please follow https://www.python.org/dev/peps/pep-0440/
-version = '0.0.2'
+version = '1.0.0'
 description = project
 author = 'Myria Solutions (PTY) Ltd'
 email = 'project@tachyonic.org'
@@ -21,7 +21,7 @@ identity = project + ' v' + version
 # Classifiers
 # <http://pypi.python.org/pypi?%3Aaction=list_classifiers>
 classifiers = [
-    'Development Status :: 1 - Planning',
+    'Development Status :: 4 - Beta',
     'Environment :: Other Environment',
     'Intended Audience :: Developers',
     'Intended Audience :: Information Technology',
