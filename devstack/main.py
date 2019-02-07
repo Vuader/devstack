@@ -51,7 +51,7 @@ from luxon.utils.dk import (start,
 from devstack import metadata
 
 builds = ['infinitystone',
-          'tradius',
+          'subscriber',
           'netrino',
           'photonic',
           ]
@@ -62,7 +62,7 @@ depends = ['luxon',
 
 ports = {'photonic': {'80/tcp': 9000},
          'infinitystone': {'80/tcp': 9001},
-         'tradius': {'80/tcp': 9002,
+         'subscriber': {'80/tcp': 9002,
                      '1812/udp': 1812,
                      '1813/udp': 1813,
                      '1812/tcp': 1812,
@@ -70,6 +70,7 @@ ports = {'photonic': {'80/tcp': 9000},
                      },
          'netrino': {'80/tcp': 9003},
          }
+
 
 def execute(*args):
     loginfo = TemporaryFile()

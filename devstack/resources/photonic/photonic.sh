@@ -16,7 +16,7 @@ if [ ! -f $INSTALLED ]; then
     python3 setup.py develop
 
     # External Modules...
-    cd /opt/tachyonic/tradius
+    cd /opt/tachyonic/subscriber
     python3 setup.py develop
 
 	cd /opt/tachyonic/netrino
@@ -28,7 +28,7 @@ if [ ! -f $INSTALLED ]; then
     cd /opt/tachyonic/www/photonic
     luxon -i photonic .
     luxon -i infinitystone.ui .
-    luxon -i tradius.ui .
+    luxon -i subscriber.ui .
     luxon -i netrino.ui .
     ln -s /opt/tachyonic/www/infinitystone/public.pem .
 

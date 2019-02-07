@@ -9,18 +9,18 @@ if [ ! -f $INSTALLED ]; then
     cd /opt/tachyonic/psychokinetic
     python3 setup.py develop
 
-    cd /opt/tachyonic/tradius
+    cd /opt/tachyonic/subscriber
     python3 setup.py develop
 
-    mkdir /opt/tachyonic/www/tradius
-    cd /opt/tachyonic/www/tradius
-    luxon -i tradius .
+    mkdir /opt/tachyonic/www/subscriber
+    cd /opt/tachyonic/www/subscriber
+    luxon -i subscriber .
     luxon -d .
-    tradius radius setup
+    subscriber radius setup
     ln -s /opt/tachyonic/www/infinitystone/public.pem .
 
     rm /etc/nginx/sites-enabled/default
-    ln -s /opt/tachyonic/tradius.nginx /etc/nginx/sites-enabled/tradius
+    ln -s /opt/tachyonic/subscriber.nginx /etc/nginx/sites-enabled/subscriber
     touch $INSTALLED
 fi
 
