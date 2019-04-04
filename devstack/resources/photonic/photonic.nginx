@@ -12,5 +12,6 @@ server {
 		proxy_redirect off;
 		proxy_pass http://unix:/opt/tachyonic/www/photonic/wsgi.sock:/;
 		proxy_set_header Host $host;
+        proxy_set_header REMOTE_ADDR $remote_addr;
 	}
 }

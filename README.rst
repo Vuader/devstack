@@ -109,7 +109,7 @@ For example, create a file called ``modules.json``:
 
     {
         "builds" : ["infinitystone",
-                    "tradius",
+                    "calabiyau",
                     "netrino",
                     "topenstack",
                     "photonic"
@@ -117,7 +117,7 @@ For example, create a file called ``modules.json``:
 
         "ports" : {"photonic": { "80/tcp": 9000 },
                   "infinitystone": { "80/tcp": 9001 },
-                  "tradius": {"80/tcp": 9002,
+                  "calabiyau": {"80/tcp": 9002,
                          "1812/udp": 1812,
                          "1813/udp": 1813,
                          "1812/tcp": 1812,
@@ -146,7 +146,7 @@ Example:
 .. code:: bash
 
    $ git remote rename origin upstream
-   $ git remote add origin git@github.com:cfrademan/tradius.git
+   $ git remote add origin git@github.com:cfrademan/calabiyau.git
    $ git push -u origin development
 
 To restart endpoint gunicorn wsgi applications:
