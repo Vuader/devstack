@@ -211,6 +211,11 @@ def bash(container):
     subprocess.call(["docker", "exec", "-it", container, 'bash'])
 
 
+def sql(args):
+    subprocess.call(["docker", "exec", "-it", 'sql', 'mysql', '-u', 'root',
+                     '-ptachyonic', 'tachyonic'])
+
+
 def start_env(path):
     module = Module('devstack')
     clone_repos()
@@ -271,6 +276,12 @@ def main(argv):
     group.add_argument('-s',
                        dest='path',
                        help='Start/Build environment in path')
+
+    group.add_argument('--sql',
+                       action='append_const',
+                       dest='funcs',
+                       const=sql,
+                       help='Access SQL DB')
 
     group.add_argument('-c',
                        action='append_const',
