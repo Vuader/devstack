@@ -17,6 +17,7 @@ if [ ! -f $INSTALLED ]; then
     apt-get --assume-yes install iputils-ping net-tools tcpdump
     export DEBIAN_FRONTEND=noninteractive && apt-get --assume-yes install tzdata
     export tz=`wget -qO - http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p'` &&  dpkg-reconfigure -f noninteractive tzdata
+    apt-get --assume-yes install freeradius python-pip
     apt-get clean
 
     cd /opt/tachyonic/luxon
@@ -25,38 +26,28 @@ if [ ! -f $INSTALLED ]; then
     cd /opt/tachyonic/psychokinetic
     python3 setup.py develop
 
-    cd /opt/tachyonic/infinitystone
-    python3 setup.py develop
-
-    cd /opt/tachyonic/photonic
-    python3 setup.py develop
-
-    # External Modules...
     cd /opt/tachyonic/calabiyau
     python3 setup.py develop
 
-	cd /opt/tachyonic/netrino
-    python3 setup.py develop
-
-    # Continued...
-
-    mkdir /opt/tachyonic/www/photonic
-    cd /opt/tachyonic/www/photonic
-    luxon -i photonic .
-    luxon -i infinitystone.ui .
-    luxon -i calabiyau.ui .
-    luxon -i netrino.ui .
+    calabiyau system setup
+    mkdir /opt/tachyonic/www/calabiyau
+    cd /opt/tachyonic/www/calabiyau
+    luxon -i calabiyau .
+    luxon -d .
+    pip install -r /etc/tachyonic/freeradius/python/calabiyau/requirements.txt
     ln -s /opt/tachyonic/www/infinitystone/public.pem .
 
     rm /etc/nginx/sites-enabled/default
-    ln -s /opt/tachyonic/photonic.nginx /etc/nginx/sites-enabled/photonic
+    ln -s /opt/tachyonic/calabiyau.nginx /etc/nginx/sites-enabled/calabiyau
     touch /var/log/gunicorn.log
     touch $INSTALLED
 fi
 
 /etc/init.d/nginx start
+calabiyau -f system manager
+calabiyau radius start
 
-cd /opt/tachyonic/www/photonic
+cd /opt/tachyonic/www/calabiyau
 
 gunicorn3 --capture-output --error-logfile /var/log/gunicorn.log --daemon --workers 2 --threads 4 --bind unix:wsgi.sock wsgi:application
 

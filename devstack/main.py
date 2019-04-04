@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2018-2019 Christiaan Frans Rademan, Dave Kruger.
+# Copyright (c) 2018-2019 Christiaan Frans Rademan.
+# Copyright (c) 2018-2019 David Kruger.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -38,20 +39,18 @@ from tempfile import TemporaryFile
 
 
 from luxon.utils.pkg import Module
-from luxon.utils.files import mkdir, Open, chmod, exists, ls, rm, joinpath
-from luxon.core.config import Config
+from luxon.utils.files import mkdir, exists
 from luxon.utils.dk import (start,
+                            exec,
                             stop,
-                            restart,
                             build,
                             remove_image,
-                            remove_container,
-                            exec)
-
+                            remove_container)
+from luxon.utils.dk import restart as container_restart
 from devstack import metadata
 
 builds = ['infinitystone',
-          'subscriber',
+          'calabiyau',
           'netrino',
           'photonic',
           ]
@@ -62,12 +61,12 @@ depends = ['luxon',
 
 ports = {'photonic': {'80/tcp': 9000},
          'infinitystone': {'80/tcp': 9001},
-         'subscriber': {'80/tcp': 9002,
-                     '1812/udp': 1812,
-                     '1813/udp': 1813,
-                     '1812/tcp': 1812,
-                     '1813/tcp': 1813,
-                     },
+         'calabiyau': {'80/tcp': 9002,
+                       '1812/udp': 1812,
+                       '1813/udp': 1813,
+                       '1812/tcp': 1812,
+                       '1813/tcp': 1813,
+                       },
          'netrino': {'80/tcp': 9003},
          }
 
@@ -89,91 +88,85 @@ def execute(*args):
         print(loginfo.read().decode('utf-8'))
         raise
 
+
 def kill(args):
-    for b in builds:
+    containers = ['syslog',
+                  'sql',
+                  'rabbitmq',
+                  'redis',
+                  *builds]
+
+    for container in containers:
         try:
-            print("Stopping %s" % b)
-            stop(b)
-        except:
-            pass
-    try:
-        print("Stopping sql")
-        stop('sql')
-    except:
-        pass
+            sys.stdout.write("Stop container %s: " % container)
+            sys.stdout.flush()
+            stop(container)
+            sys.stdout.write("Success\n")
+        except Exception:
+            sys.stdout.write("Failed\n")
 
-    try:
-        print("Stopping rabbitmq")
-        stop('rabbitmq')
-    except:
-        pass
+        sys.stdout.flush()
 
-    try:
-        print("Stopping redis")
-        stop('redis')
-    except:
-        pass
 
 def clear(args):
-    for b in builds:
+    containers = ['syslog',
+                  'sql',
+                  'rabbitmq',
+                  'redis',
+                  *builds]
+
+    for container in containers:
         try:
-            print("Deleting container %s" % b)
-            remove_container(b)
-        except:
-            pass
-    try:
-        print("Deleting container sql")
-        remove_container('sql')
-    except:
-        pass
+            sys.stdout.write("Deleting container %s: " % container)
+            sys.stdout.flush()
+            remove_container(container)
+            sys.stdout.write("Success\n")
+        except Exception:
+            sys.stdout.write("Failed\n")
 
-    try:
-        print("Deleting container rabbitmq")
-        remove_container('rabbitmq')
-    except:
-        pass
+        sys.stdout.flush()
 
-    try:
-        print("Deleting container redis")
-        remove_container('redis')
-    except:
-        pass
 
 def delete(args):
-    for b in builds:
+    containers = ['balabit/syslog-ng',
+                  'mariadb',
+                  'rabbitmq',
+                  'redis',
+                  *builds]
+
+    for container in containers:
         try:
-            print("Deleting image %s" % b)
-            remove_image(b)
-        except:
-            pass
-    try:
-        print("Deleting image sql")
-        remove_image('sql')
-    except:
-        pass
+            sys.stdout.write("Deleting image %s: " % container)
+            sys.stdout.flush()
+            remove_image(container)
+            sys.stdout.write("Success\n")
+        except Exception:
+            sys.stdout.write("Failed\n")
 
-    try:
-        print("Deleting image rabbitmq")
-        remove_image('rabbitmq')
-    except:
-        pass
+        sys.stdout.flush()
 
-    try:
-        print("Deleting image redis")
-        remove_image('redis')
-    except:
-        pass
 
 def build_images():
     module = Module('devstack')
     for b in builds:
-        print("Building %s" % b)
-        docker_file = '/resources/%s/Dockerfile' % b
-        docker_obj = module.file(docker_file)
-        image, log = build(b,
-                           docker_obj)
-        for l in log:
-            print(l)
+        try:
+            sys.stdout.write("\nBuilding %s: " % b)
+            sys.stdout.flush()
+            print("Building %s" % b)
+            docker_file = '/resources/%s/Dockerfile' % b
+            docker_obj = module.file(docker_file)
+            image, log = build(b,
+                               docker_obj)
+            sys.stdout.write("Success\n")
+            for l in log:
+                print(l)
+        except Exception:
+            sys.stdout.write("Failed\n")
+            sys.stdout.flush()
+            exit()
+
+        sys.stdout.flush()
+
 
 def clone_repos():
     for b in builds + depends:
@@ -181,24 +174,65 @@ def clone_repos():
             origin = "https://github.com/TachyonicProject/%s.git" % b
             print(execute(['git', 'clone', '-b', 'development',  origin]))
 
+
 def reload(args):
-    for b in builds:
-        print("Reloading %s" % b)
+    for container in builds:
         try:
-            exec(b, 'pkill -HUP -f gunicorn3')
-        except:
-            print("Failed Reloading %s" % b)
+            sys.stdout.write("Reloading Gunicorn %s: " % container)
+            sys.stdout.flush()
+            exec(container, 'pkill -HUP -f gunicorn3')
+            sys.stdout.write("Success\n")
+        except Exception:
+            sys.stdout.write("Failed\n")
+
+        sys.stdout.flush()
+
+
+def restart(args):
+    containers = ['syslog',
+                  'sql',
+                  'rabbitmq',
+                  'redis',
+                  *builds]
+
+    for container in containers:
+        try:
+            sys.stdout.write("Restarting %s: " % container)
+            sys.stdout.flush()
+            container_restart(container)
+            sys.stdout.write("Success\n")
+        except Exception:
+            sys.stdout.write("Failed\n")
+
+        sys.stdout.flush()
+
+
+def bash(container):
+    subprocess.call(["docker", "exec", "-it", container, 'bash'])
+
 
 def start_env(path):
+    module = Module('devstack')
     clone_repos()
     mkdir('%s/www' % path)
+    mkdir('%s/log' % path)
+    print("Starting syslog")
+    module.copy('resources/syslog-ng.conf',
+                path)
+    log_path = path.rstrip('/') + '/log'
+    log_conf = path.rstrip('/') + '/syslog-ng.conf'
+    start('syslog', 'balabit/syslog-ng:latest',
+          volumes={log_path: '/var/log',
+                   log_conf: '/etc/syslog-ng/syslog-ng.conf'
+                   },
+          hostname='log')
     print("Starting sql")
     start('sql', 'mariadb:latest',
-	  ports={'3306/tcp': 3306},
-	  MYSQL_ROOT_PASSWORD='tachyonic',
-	  MYSQL_DATABASE='tachyonic',
-	  MYSQL_USER='tachyonic',
-	  MYSQL_PASSWORD='tachyonic')
+          ports={'3306/tcp': 3306},
+          MYSQL_ROOT_PASSWORD='tachyonic',
+          MYSQL_DATABASE='tachyonic',
+          MYSQL_USER='tachyonic',
+          MYSQL_PASSWORD='tachyonic')
     print("Starting rabbitmq")
     start('rabbitmq', 'rabbitmq:latest')
     print("Starting redis")
@@ -206,19 +240,19 @@ def start_env(path):
 
     build_images()
     links = []
-    module = Module('devstack')
     for b in builds:
         print("Starting %s" % b)
-        module.copy('resources/%s/%s.sh' % (b,b,),
+        module.copy('resources/%s/%s.sh' % (b, b,),
                     path)
-        module.copy('resources/%s/%s.nginx' % (b,b,),
+        module.copy('resources/%s/%s.nginx' % (b, b,),
                     path)
         start(b, b,
-              links=['sql', 'rabbitmq', 'redis',] + links,
+              links=['syslog', 'sql', 'rabbitmq', 'redis'] + links,
               volumes={path: '/opt/tachyonic'},
               ports=ports.get(b),
               hostname=b)
         links.append(b)
+
 
 def main(argv):
     global builds
@@ -229,6 +263,10 @@ def main(argv):
 
     parser = argparse.ArgumentParser(description=description)
     group = parser.add_mutually_exclusive_group(required=True)
+
+    group.add_argument('-b',
+                       dest='bash',
+                       help='Start Bash Shell')
 
     group.add_argument('-s',
                        dest='path',
@@ -255,15 +293,20 @@ def main(argv):
     group.add_argument('-r',
                        action='append_const',
                        dest='funcs',
+                       const=restart,
+                       help='Restart all containers')
+
+    group.add_argument('-g',
+                       action='append_const',
+                       dest='funcs',
                        const=reload,
-                       help='Reload Gunicorn Applications in all containers')
+                       help='Restart all gunicorn')
 
     parser.add_argument('-m',
                         help='Load modules from json file at '
-                            'specified location',
+                             'specified location',
                         dest='json_file',
                         default=None)
-
 
     args = parser.parse_args()
 
@@ -280,6 +323,10 @@ def main(argv):
         args.path = os.path.abspath(args.path)
         os.chdir(args.path)
         start_env(args.path)
+
+    if args.bash is not None:
+        bash(args.bash)
+
 
 def entry_point():
     """Zero-argument entry point for use with setuptools/distribute."""
