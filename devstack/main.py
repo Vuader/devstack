@@ -180,7 +180,13 @@ def reload(args):
         try:
             sys.stdout.write("Reloading Gunicorn %s: " % container)
             sys.stdout.flush()
-            exec(container, 'pkill -HUP -f gunicorn3')
+            exec(container, 'pkill -9 gunicorn3')
+            exec(container, 'gunicorn3 --capture-output' +
+                 ' --error-logfile /var/log/gunicorn.log' +
+                 ' --daemon --workers 2 --threads 4' +
+                 ' --bind unix:/opt/tachyonic/www/%s/wsgi.sock' % container +
+                 ' --pythonpath /opt/tachyonic/www/%s' % container +
+                 ' wsgi:application')
             sys.stdout.write("Success\n")
         except Exception:
             sys.stdout.write("Failed\n")
