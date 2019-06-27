@@ -240,14 +240,19 @@ def start_env(path):
     print("Starting sql")
     start('sql', 'mariadb:latest',
           ports={'3306/tcp': 3306},
-          MYSQL_ROOT_PASSWORD='tachyonic',
-          MYSQL_DATABASE='tachyonic',
-          MYSQL_USER='tachyonic',
-          MYSQL_PASSWORD='tachyonic')
+          env={'MYSQL_ROOT_PASSWORD':'tachyonic',
+            'MYSQL_DATABASE':'tachyonic',
+            'MYSQL_USER':'tachyonic',
+            'MYSQL_PASSWORD':'tachyonic'})
     print("Starting rabbitmq")
     start('rabbitmq', 'rabbitmq:latest')
     print("Starting redis")
     start('redis', 'redis:latest')
+    print("Starting ELastic Search")
+    start('elasticsearch', 'elasticsearch:7.0.1',
+          ports={'9200/tcp': 9200,
+                 '9300/tcp': 9300},
+          env={'discovery.type': 'single - node'})
 
     build_images()
     links = []
@@ -258,7 +263,8 @@ def start_env(path):
         module.copy('resources/%s/%s.nginx' % (b, b,),
                     path)
         start(b, b,
-              links=['syslog', 'sql', 'rabbitmq', 'redis'] + links,
+              links=['syslog', 'sql', 'rabbitmq', 'redis',
+                     'elasticsearch'] + links,
               volumes={path: '/opt/tachyonic'},
               ports=ports.get(b),
               hostname=b)
